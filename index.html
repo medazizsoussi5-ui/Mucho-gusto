@@ -1,0 +1,304 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HACKER TEST</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>⚠ SYSTEM SECURITY ALERT</span>
+        <span class="status">● SYSTEM SCANNING</span>
+    </header>
+
+    <main id="quiz">
+
+        <h1>HACKER TEST</h1>
+
+        <p class="subtitle">ANSWER 5 QUESTIONS FAST!</p>
+
+        <div class="stats">
+            <p>⏳ TIME: <span id="timer">15</span>s</p>
+            <p>QUESTION: <span id="number">1</span>/5</p>
+            <p>WRONG: <span id="wrong">0</span></p>
+        </div>
+
+        <div class="progress">
+            <div id="bar"></div>
+        </div>
+
+        <section class="question-box">
+
+            <h2 id="question">Loading question...</h2>
+
+            <div id="answers"></div>
+
+        </section>
+
+        <p id="feedback"></p>
+
+    </main>
+
+    <section id="result" class="hidden">
+
+        <h1 id="resultTitle">SYSTEM HACKED</h1>
+
+        <p id="resultText"></p>
+
+        <div id="resultIcon">☠️</div>
+
+        <button id="restart">TRY AGAIN</button>
+
+    </section>
+
+    <script>
+
+        const questions = [
+
+            {
+                question: "Chkoun zabour l classe? 😂",
+                answers: [
+                    "Basma Smaye",
+                    "8ofran 5oulet",
+                    "Doura",
+                    "Bali"
+                ],
+                correct: 3
+            },
+
+            {
+                question: "Chkoun a3ass wa7ed fil classe? 😈",
+                answers: [
+                    "Asill",
+                    "Bali",
+                    "Korkobi",
+                    "7ma El Sala7"
+                ],
+                correct: 1
+            },
+
+            {
+                question: "Chkoun arzen? 😂",
+                answers: [
+                    "1000 kg",
+                    "Sa3a Eng",
+                    "Zohra",
+                    "Montasar"
+                ],
+                correct: 2
+            },
+
+            {
+                question: "Chkoun aks7 wa7ed? 🔥",
+                answers: [
+                    "Young RZ",
+                    "Klay",
+                    "Katib",
+                    "Kamara"
+                ],
+                correct: 1
+            },
+
+            {
+                question: "Chkoun t7eb tnikou b tri7a? 🎯",
+                answers: [
+                    "Bali",
+                    "Wa7ed yhoudi",
+                    "Chamchoun",
+                    "Mostfa"
+                ],
+                correct: 0
+            }
+
+        ];
+
+        let currentQuestion = 0;
+        let wrongAnswers = 0;
+        let timeLeft = 15;
+        let gameOver = false;
+        let timerInterval;
+
+        const quiz = document.getElementById("quiz");
+        const result = document.getElementById("result");
+
+        const questionEl = document.getElementById("question");
+        const answersEl = document.getElementById("answers");
+
+        const timerEl = document.getElementById("timer");
+        const numberEl = document.getElementById("number");
+        const wrongEl = document.getElementById("wrong");
+
+        const bar = document.getElementById("bar");
+        const feedback = document.getElementById("feedback");
+
+        function showQuestion() {
+
+            if (currentQuestion >= questions.length) {
+                finishGame();
+                return;
+            }
+
+            const q = questions[currentQuestion];
+
+            questionEl.textContent = q.question;
+
+            numberEl.textContent = currentQuestion + 1;
+
+            answersEl.innerHTML = "";
+
+            feedback.textContent = "";
+
+            q.answers.forEach((answer, index) => {
+
+                const button = document.createElement("button");
+
+                button.className = "answer";
+
+                button.textContent = answer;
+
+                button.addEventListener("click", () => {
+
+                    if (gameOver) return;
+
+                    const buttons = answersEl.querySelectorAll("button");
+
+                    buttons.forEach(btn => btn.disabled = true);
+
+                    if (index === q.correct) {
+
+                        button.classList.add("correct");
+
+                        feedback.textContent = "CORRECT! ✓";
+
+                        feedback.style.color = "#00ff66";
+
+                    } else {
+
+                        wrongAnswers++;
+
+                        wrongEl.textContent = wrongAnswers;
+
+                        button.classList.add("incorrect");
+
+                        buttons[q.correct].classList.add("correct");
+
+                        feedback.textContent = "WRONG ANSWER! ⚠";
+
+                        feedback.style.color = "red";
+
+                    }
+
+                    currentQuestion++;
+
+                    setTimeout(() => {
+
+                        if (!gameOver) {
+                            showQuestion();
+                        }
+
+                    }, 500);
+
+                });
+
+                answersEl.appendChild(button);
+
+            });
+
+        }
+
+        function finishGame() {
+
+            if (gameOver) return;
+
+            gameOver = true;
+
+            clearInterval(timerInterval);
+
+            quiz.classList.add("hidden");
+
+            result.classList.remove("hidden");
+
+            if (wrongAnswers >= 2) {
+
+                document.getElementById("resultTitle").textContent =
+                    "SYSTEM HACKED! 😂";
+
+                document.getElementById("resultText").textContent =
+                    "BALI KNOWS EVERYTHING! YOU FAILED THE TEST!";
+
+                document.getElementById("resultIcon").textContent = "☠️";
+
+            } else {
+
+                document.getElementById("resultTitle").textContent =
+                    "SYSTEM SECURED!";
+
+                document.getElementById("resultText").textContent =
+                    "HAK 7CHITOU L NMARA HADI  😈";
+
+                document.getElementById("resultIcon").textContent = "🟢";
+
+            }
+
+        }
+
+        function startGame() {
+
+            clearInterval(timerInterval);
+
+            currentQuestion = 0;
+
+            wrongAnswers = 0;
+
+            timeLeft = 15;
+
+            gameOver = false;
+
+            timerEl.textContent = timeLeft;
+
+            wrongEl.textContent = 0;
+
+            bar.style.width = "100%";
+
+            quiz.classList.remove("hidden");
+
+            result.classList.add("hidden");
+
+            showQuestion();
+
+            timerInterval = setInterval(() => {
+
+                timeLeft--;
+
+                timerEl.textContent = timeLeft;
+
+                bar.style.width = (timeLeft / 15 * 100) + "%";
+
+                if (timeLeft <= 0) {
+
+                    finishGame();
+
+                }
+
+            }, 1000);
+
+        }
+
+        document.getElementById("restart").addEventListener(
+            "click",
+            startGame
+        );
+
+        startGame();
+
+    </script>
+
+</body>
+</html>
+```
